@@ -14,4 +14,16 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 1rem;
+}
+
+.main-container__options {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+}
+
+.options__groups {
+    display: flex;
+    gap: 0.2rem;
 }

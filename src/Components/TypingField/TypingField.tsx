@@ -21,12 +21,7 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
     const [typingInput, setTypingInput] = useState("");
     const [showTypingInput, setShowTypingInput] = useState(false);
     const wordInput = useRef<null | HTMLInputElement>(null);
-    // console.log(wordInput);
-
-    // useEffect(() => {
-    //     console.log(document.activeElement);
-    //     setShowTypingInput(document.activeElement === wordInput.current);
-    // }, [wordInput]);
+    const currentLetter = useRef<null | HTMLDivElement>(null);
 
     useEffect(() => {
         if (!typingData) {
@@ -84,6 +79,11 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                     newTypingData[wordIndex][letterIndex + 1].isCurrent = true;
                 } else {
                     newTypingData[wordIndex + 1][0].isCurrent = true;
+                }
+                if (currentLetter.current) {
+                    currentLetter.current.scrollIntoView({
+                        behavior: "smooth",
+                    });
                 }
                 setTypingData(newTypingData);
             });
@@ -162,6 +162,11 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                                                     : "word__character"
                                             }
                                             onKeyDown={handleKeyPress}
+                                            ref={
+                                                letter.isCurrent
+                                                    ? currentLetter
+                                                    : null
+                                            }
                                         >
                                             {letter.isCurrent && (
                                                 <div className="word__position-marker"></div>
