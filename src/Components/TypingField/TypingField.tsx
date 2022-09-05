@@ -21,11 +21,12 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
     const [typingInput, setTypingInput] = useState("");
     const [showTypingInput, setShowTypingInput] = useState(false);
     const wordInput = useRef(null);
-    console.log(wordInput);
+    // console.log(wordInput);
 
     useEffect(() => {
+        console.log(document.activeElement);
         setShowTypingInput(document.activeElement === wordInput.current);
-    }, []);
+    }, [document.activeElement]);
 
     useEffect(() => {
         if (!typingData) {
@@ -89,7 +90,7 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
     }, [typingInput]);
 
     const handleKeyPress = (event: any) => {
-        console.log(event.key);
+        // console.log(event.key);
         return event;
     };
 
@@ -139,6 +140,7 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                             </div>
                         );
                     })}
+                <div>{showTypingInput ? "SHOW" : "HIDE"}</div>
             </div>
         </section>
     );

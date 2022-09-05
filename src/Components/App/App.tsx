@@ -15,12 +15,16 @@ const App = () => {
     };
 
     return (
-        <>
+        <div className="app">
             <Header />
-            <section className="app"></section>
-            <button onClick={handleStartClick}>Start</button>
-            <TypingField typingText={text} />
-        </>
+
+            <div className="app__main-container">
+                <section className="">
+                    <button onClick={handleStartClick}>Start</button>
+                    <TypingField typingText={text} />
+                </section>
+            </div>
+        </div>
     );
 };
 
