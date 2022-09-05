@@ -1,0 +1,60 @@
+.typing-field {
+    width: 80%;
+    height: 60%;
+}
+
+.typing-field__input {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.input__input {
+    position: absolute;
+    /* should be 0 */
+    opacity: 0.5;
+}
+.input__word {
+    display: flex;
+}
+
+.word__character,
+.word__character--incorrect,
+.word__character--correct {
+    padding: 0.2rem;
+    opacity: 0.7;
+}
+
+.word__character--incorrect {
+    color: red;
+    font-weight: bolder;
+}
+
+.word__character--correct {
+    opacity: 1;
+    font-weight: bolder;
+}
+
+.word__position-marker {
+    position: absolute;
+    background-color: red;
+    height: 1.5rem;
+    width: 2px;
+    animation: blink 1.5s linear infinite;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    51% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
