@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Header from "../Header/Header";
 import loremIpsumService from "../../services/loremIpsumService";
@@ -7,12 +7,14 @@ const App = () => {
     const [text, setText] = useState("");
     const [showText, setShowText] = useState(false);
 
-    const handleStartClick = () => {
+    useEffect(() => {
         loremIpsumService
             .getParagraphs(1, "short")
             .then((result) => setText(result));
         setShowText(true);
-    };
+    }, []);
+
+    // const handleStartClick = () => {};
 
     return (
         <div className="app">
@@ -20,7 +22,7 @@ const App = () => {
 
             <div className="app__main-container">
                 <section className="">
-                    <button onClick={handleStartClick}>Start</button>
+                    {/* <button onClick={handleStartClick}>Start</button> */}
                     <TypingField typingText={text} />
                 </section>
             </div>

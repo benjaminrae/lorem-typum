@@ -20,13 +20,13 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
     const [typingData, setTypingData] = useState<typingData | null>([]);
     const [typingInput, setTypingInput] = useState("");
     const [showTypingInput, setShowTypingInput] = useState(false);
-    const wordInput = useRef(null);
+    const wordInput = useRef<null | HTMLInputElement>(null);
     // console.log(wordInput);
 
     useEffect(() => {
         console.log(document.activeElement);
         setShowTypingInput(document.activeElement === wordInput.current);
-    }, [document.activeElement]);
+    }, [wordInput]);
 
     useEffect(() => {
         if (!typingData) {
@@ -98,9 +98,35 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
         setTypingInput(event.target.value);
     };
 
+    const handleTypingFieldClick = (event: any) => {
+        if (wordInput.current !== null) {
+            wordInput.current.focus();
+        }
+    };
+
+    const handleInputOnFocus = () => {
+        setShowTypingInput(true);
+    };
+
     return (
-        <section className="typing-field">
-            <div className="typing-field__input">
+        <section
+            className={
+                showTypingInput ? "typing-field" : "typing-field--blurred"
+            }
+            onClick={handleTypingFieldClick}
+        >
+            {!showTypingInput && (
+                <div className="typing-field__focus-warning">
+                    Click to continue
+                </div>
+            )}
+            <div
+                className={
+                    showTypingInput
+                        ? "typing-field__input"
+                        : "typing__input--blurred"
+                }
+            >
                 <input
                     // onKeyDown={handleKeyPress}
                     tabIndex={0}
@@ -111,6 +137,7 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                     value={typingInput}
                     onChange={handleTypingInputChange}
                     ref={wordInput}
+                    onFocus={handleInputOnFocus}
                 />
                 {/* <input id="wordsInput" class="" tabindex="0" autocomplete="off" autocapitalize="off" autocorrect="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" list="autocompleteOff" /> */}
                 {typingData &&
