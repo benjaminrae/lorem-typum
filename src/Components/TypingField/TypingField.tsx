@@ -23,16 +23,17 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
     const wordInput = useRef<null | HTMLInputElement>(null);
     // console.log(wordInput);
 
-    useEffect(() => {
-        console.log(document.activeElement);
-        setShowTypingInput(document.activeElement === wordInput.current);
-    }, [wordInput]);
+    // useEffect(() => {
+    //     console.log(document.activeElement);
+    //     setShowTypingInput(document.activeElement === wordInput.current);
+    // }, [wordInput]);
 
     useEffect(() => {
         if (!typingData) {
             return;
         }
         const typingTextWords = typingText.split(" ");
+        typingTextWords[1] = "typum";
         const typingTextWordsAndLetters = typingTextWords.map(
             (word, wordIndex) => {
                 const splitWord = word.split("").map((letter, letterIndex) => {
