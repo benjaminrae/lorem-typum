@@ -1,5 +1,5 @@
 .typing-field {
-    width: 80%;
+    width: 100%;
     height: 60%;
 }
 
@@ -10,14 +10,18 @@
     transform: translateX(-50%);
     color: var(--vermilion);
     font-weight: bolder;
+    font-size: 1.5rem;
 }
+
 .typing-field__input,
-.typing__input--blurred {
+.typing-field__input--blurred {
+    width: 100%;
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    font-size: 1.5rem;
 }
-.typing__input--blurred {
+.typing-field__input--blurred {
     filter: blur(4px);
 }
 
@@ -39,7 +43,7 @@
 }
 
 .word__character--incorrect {
-    color: red;
+    color: var(--mandarin);
     font-weight: bolder;
 }
 
@@ -50,7 +54,7 @@
 
 .word__position-marker {
     position: absolute;
-    background-color: red;
+    background-color: var(--mandarin);
     height: 1.5rem;
     width: 2px;
     animation: blink 1.5s linear infinite;
@@ -66,7 +70,6 @@
     51% {
         opacity: 0;
     }
-
     100% {
         opacity: 0;
     }

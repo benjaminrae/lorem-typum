@@ -108,6 +108,10 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
         setShowTypingInput(true);
     };
 
+    const handleInputOnBlur = () => {
+        setShowTypingInput(false);
+    };
+
     return (
         <section
             className={
@@ -124,7 +128,7 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                 className={
                     showTypingInput
                         ? "typing-field__input"
-                        : "typing__input--blurred"
+                        : "typing-field__input--blurred"
                 }
             >
                 <input
@@ -138,6 +142,7 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                     onChange={handleTypingInputChange}
                     ref={wordInput}
                     onFocus={handleInputOnFocus}
+                    onBlur={handleInputOnBlur}
                 />
                 {/* <input id="wordsInput" class="" tabindex="0" autocomplete="off" autocapitalize="off" autocorrect="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" list="autocompleteOff" /> */}
                 {typingData &&
@@ -167,7 +172,6 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                             </div>
                         );
                     })}
-                <div>{showTypingInput ? "SHOW" : "HIDE"}</div>
             </div>
         </section>
     );
