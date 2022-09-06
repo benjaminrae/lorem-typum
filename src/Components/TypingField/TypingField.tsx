@@ -10,6 +10,9 @@ interface letter {
     isCurrent: boolean;
     isCorrect: boolean;
     isIncorrect: boolean;
+    isDeleted?: boolean;
+    isCorrected?: boolean;
+    isExtra?: boolean;
 }
 
 type word = letter[];
@@ -57,24 +60,60 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
         let newTypingData = [...typingData];
         typingInputWords.forEach((word, wordIndex) => {
             word.split("").forEach((letter, letterIndex) => {
+                if (letterIndex >= typingData[wordIndex].length) {
+                    console.log("too may letters");
+                    const newLetter: letter = {
+                        character: typingInputWords[wordIndex][letterIndex],
+                        isCurrent: true,
+                        isCorrect: false,
+                        isIncorrect: true,
+                        isExtra: true,
+                    };
+                    newTypingData[wordIndex].push(newLetter);
+                    newTypingData = removeCursors(newTypingData);
+                    setTypingData(newTypingData);
+                    return;
+                }
+                if (typingData[wordIndex][letterIndex].isCurrent) {
+                    newTypingData = newTypingData.map((word, newWordIndex) => {
+                        return word.map((letter, newLetterIndex) => {
+                            if (wordIndex !== newWordIndex) {
+                                return letter;
+                            }
+                            if (!letter.isExtra) {
+                                return letter;
+                            }
+                            if (
+                                letter.isExtra &&
+                                letterIndex >= newLetterIndex
+                            ) {
+                                console.log(letterIndex, newLetterIndex);
+                                letter.isDeleted = false;
+                                return letter;
+                            } else {
+                                letter.isDeleted = true;
+                                console.log("delete");
+                                return letter;
+                            }
+                        });
+                    });
+                    setTypingData(newTypingData);
+                }
                 if (
                     typingInputWords[wordIndex][letterIndex] ===
-                    typingData[wordIndex][letterIndex].character
+                        typingData[wordIndex][letterIndex].character &&
+                    !typingData[wordIndex][letterIndex].isExtra
                 ) {
                     newTypingData[wordIndex][letterIndex].isCorrect = true;
                 }
                 if (
                     typingInputWords[wordIndex][letterIndex] !==
-                    typingData[wordIndex][letterIndex].character
+                        typingData[wordIndex][letterIndex].character &&
+                    !typingData[wordIndex][letterIndex].isExtra
                 ) {
                     newTypingData[wordIndex][letterIndex].isIncorrect = true;
                 }
-                newTypingData = newTypingData.map((word) => {
-                    return word.map((letter) => {
-                        letter.isCurrent = false;
-                        return letter;
-                    });
-                });
+                newTypingData = removeCursors(newTypingData);
                 if (typingData[wordIndex][letterIndex + 1]) {
                     newTypingData[wordIndex][letterIndex + 1].isCurrent = true;
                 } else {
@@ -96,8 +135,10 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
         }
     }, []);
 
-    const handleKeyPress = (event: any) => {
-        // console.log(event.key);
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Backspace") {
+        }
+        // console.log(event);
         return event;
     };
 
@@ -122,6 +163,19 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
         setShowTypingInput(false);
     };
 
+    const removeCursors = (newTypingData: word[]) => {
+        return newTypingData.map((word) => {
+            return word.map((letter) => {
+                letter.isCurrent = false;
+                return letter;
+            });
+        });
+    };
+
+    const removeExtras = (newTypingData: word[]) => {
+        return newTypingData.map((word) => {});
+    };
+
     return (
         <section
             className={
@@ -143,7 +197,7 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                     }
                 >
                     <input
-                        // onKeyDown={handleKeyPress}
+                        onKeyDown={handleKeyPress}
                         tabIndex={0}
                         autoCapitalize="off"
                         autoComplete="off"
@@ -165,13 +219,16 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                                             <div
                                                 key={index}
                                                 className={
-                                                    letter.isCorrect
+                                                    letter.isDeleted
+                                                        ? "word__character--deleted"
+                                                        : letter.isExtra
+                                                        ? "word__character--extra"
+                                                        : letter.isCorrect
                                                         ? "word__character--correct"
                                                         : letter.isIncorrect
                                                         ? "word__character--incorrect"
                                                         : "word__character"
                                                 }
-                                                onKeyDown={handleKeyPress}
                                                 ref={
                                                     letter.isCurrent
                                                         ? currentLetter

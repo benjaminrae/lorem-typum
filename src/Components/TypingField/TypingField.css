@@ -51,7 +51,9 @@
 
 .word__character,
 .word__character--incorrect,
-.word__character--correct {
+.word__character--correct,
+.word__character--extra,
+.word__character--deleted {
     padding: 0.2rem;
     opacity: 0.7;
     position: relative;
@@ -67,6 +69,14 @@
     font-weight: bolder;
 }
 
+.word__character--extra {
+    color: var(--vermilion);
+    opacity: 0.5;
+}
+
+.word__character--deleted {
+    display: none;
+}
 .word__position-marker {
     position: absolute;
     background-color: var(--mandarin);
