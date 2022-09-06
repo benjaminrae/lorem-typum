@@ -9,7 +9,7 @@
     left: 50%;
     top: 50%;
     transform: translateX(-50%);
-    color: var(--vermilion);
+    color: var(--error);
     font-weight: bolder;
     font-size: 1.5rem;
 }
@@ -60,7 +60,7 @@
 }
 
 .word__character--incorrect {
-    color: var(--mandarin);
+    color: var(--incorrect);
     font-weight: bolder;
 }
 
@@ -70,7 +70,7 @@
 }
 
 .word__character--extra {
-    color: var(--vermilion);
+    color: var(--error);
     opacity: 0.5;
 }
 
@@ -80,7 +80,7 @@
 .word__position-marker,
 .word__position-marker--right {
     position: absolute;
-    background-color: var(--mandarin);
+    background-color: var(--incorrect);
     height: 1.5rem;
     width: 2px;
     animation: blink 1.5s linear infinite;

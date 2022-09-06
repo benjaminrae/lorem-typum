@@ -5,11 +5,20 @@ import loremIpsumService from "../../services/loremIpsumService";
 import TypingField from "../TypingField/TypingField";
 import { length } from "../../services/loremIpsumService";
 
+export interface GameMode {
+    isLorem: boolean;
+    isBacon: boolean;
+}
 const App = () => {
     const [text, setText] = useState("");
     const [showText, setShowText] = useState(false);
     const [length, setLength] = useState<length>("short");
     const [isWithPunctuation, setIsWithPunctuation] = useState(true);
+    const [gameMode, setGameMode] = useState<GameMode>({
+        isLorem: true,
+        isBacon: false,
+    });
+    const [theme, setTheme] = useState("lorem");
 
     useEffect(() => {
         loremIpsumService.getParagraphs(length).then((result) => {
@@ -45,9 +54,24 @@ const App = () => {
         const newText = lowerCaseText.match(regex)!.join("");
         return newText;
     };
+
+    const changeToBacon = () => {
+        setGameMode((prev) => ({ ...prev, isLorem: false, isBacon: true }));
+        setTheme("bacon");
+    };
+
+    const changeToLorem = () => {
+        setGameMode((prev) => ({ ...prev, isLorem: true, isBacon: false }));
+        setTheme("lorem");
+    };
+
     return (
-        <div className="app">
-            <Header />
+        <div className="app" data-theme={theme}>
+            <Header
+                gameMode={gameMode}
+                changeToBacon={changeToBacon}
+                changeToLorem={changeToLorem}
+            />
 
             <div className="app__main-container">
                 <section className="main-container__options">
