@@ -90,6 +90,12 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
         });
     }, [typingInput]);
 
+    useEffect(() => {
+        if (currentLetter.current) {
+            currentLetter.current.scrollIntoView();
+        }
+    }, []);
+
     const handleKeyPress = (event: any) => {
         // console.log(event.key);
         return event;
@@ -125,59 +131,61 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                     Click to continue
                 </div>
             )}
-            <div
-                className={
-                    showTypingInput
-                        ? "typing-field__input"
-                        : "typing-field__input--blurred"
-                }
-            >
-                <input
-                    // onKeyDown={handleKeyPress}
-                    tabIndex={0}
-                    autoCapitalize="off"
-                    autoComplete="off"
-                    autoCorrect="off"
-                    className="input__input"
-                    value={typingInput}
-                    onChange={handleTypingInputChange}
-                    ref={wordInput}
-                    onFocus={handleInputOnFocus}
-                    onBlur={handleInputOnBlur}
-                />
-                {/* <input id="wordsInput" class="" tabindex="0" autocomplete="off" autocapitalize="off" autocorrect="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" list="autocompleteOff" /> */}
-                {typingData &&
-                    typingData.map((word, index) => {
-                        return (
-                            <div className="input__word" key={index}>
-                                {word.map((letter, index) => (
-                                    <>
-                                        <div
-                                            key={index}
-                                            className={
-                                                letter.isCorrect
-                                                    ? "word__character--correct"
-                                                    : letter.isIncorrect
-                                                    ? "word__character--incorrect"
-                                                    : "word__character"
-                                            }
-                                            onKeyDown={handleKeyPress}
-                                            ref={
-                                                letter.isCurrent
-                                                    ? currentLetter
-                                                    : null
-                                            }
-                                        >
-                                            {letter.isCurrent && (
-                                                <div className="word__position-marker"></div>
-                                            )}
-                                            {letter.character}
-                                        </div>
-                                    </>
-                                ))}
-                            </div>
-                        );
-                    })}
+            <div className="typing-field__input-wrapper">
+                <div
+                    className={
+                        showTypingInput
+                            ? "typing-field__input"
+                            : "typing-field__input--blurred"
+                    }
+                >
+                    <input
+                        // onKeyDown={handleKeyPress}
+                        tabIndex={0}
+                        autoCapitalize="off"
+                        autoComplete="off"
+                        autoCorrect="off"
+                        className="input__input"
+                        value={typingInput}
+                        onChange={handleTypingInputChange}
+                        ref={wordInput}
+                        onFocus={handleInputOnFocus}
+                        onBlur={handleInputOnBlur}
+                    />
+                    {/* <input id="wordsInput" class="" tabindex="0" autocomplete="off" autocapitalize="off" autocorrect="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" list="autocompleteOff" /> */}
+                    {typingData &&
+                        typingData.map((word, index) => {
+                            return (
+                                <div className="input__word" key={index}>
+                                    {word.map((letter, index) => (
+                                        <>
+                                            <div
+                                                key={index}
+                                                className={
+                                                    letter.isCorrect
+                                                        ? "word__character--correct"
+                                                        : letter.isIncorrect
+                                                        ? "word__character--incorrect"
+                                                        : "word__character"
+                                                }
+                                                onKeyDown={handleKeyPress}
+                                                ref={
+                                                    letter.isCurrent
+                                                        ? currentLetter
+                                                        : null
+                                                }
+                                            >
+                                                {letter.isCurrent && (
+                                                    <div className="word__position-marker"></div>
+                                                )}
+                                                {letter.character}
+                                            </div>
+                                        </>
+                                    ))}
+                                </div>
+                            );
+                        })}
+                </div>
             </div>
         </section>
     );

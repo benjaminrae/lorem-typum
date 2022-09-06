@@ -14,18 +14,15 @@ const App = () => {
 
     useEffect(() => {
         console.log(length, "len/paras");
-        loremIpsumService
-            .getParagraphs(length)
-            .then((result) => setText(result));
-        setShowText(true);
-        const regex = /([a-zA-Z]|\s)/g;
-        if (!isWithPunctuation) {
-            const lowerCaseText = text.toLowerCase();
-            const newText = lowerCaseText.match(regex)?.join("");
-            if (typeof newText === "string") {
+        loremIpsumService.getParagraphs(length).then((result) => {
+            if (isWithPunctuation) {
+                setText(result);
+            } else {
+                const newText = removePunctuation(result);
                 setText(newText);
             }
-        }
+        });
+        setShowText(true);
     }, [isWithPunctuation, length]);
 
     const handleLengthChange = (event: any) => {
@@ -36,7 +33,12 @@ const App = () => {
         setIsWithPunctuation(event.target.value === 1);
     };
 
-    const removePunctuation = () => {};
+    const removePunctuation = (text: string): string => {
+        const regex = /([a-zA-Z]|\s)/g;
+        const lowerCaseText = text.toLowerCase();
+        const newText = lowerCaseText.match(regex)!.join("");
+        return newText;
+    };
     return (
         <div className="app">
             <Header />
