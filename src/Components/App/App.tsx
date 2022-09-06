@@ -3,41 +3,61 @@ import "./App.css";
 import Header from "../Header/Header";
 import loremIpsumService from "../../services/loremIpsumService";
 import TypingField from "../TypingField/TypingField";
-import { length } from "../../services/loremIpsumService";
+import { RequestParameters } from "../../services/loremIpsumService";
+import baconIpsumService from "../../services/baconIpsumService";
 
 export interface GameMode {
     isLorem: boolean;
     isBacon: boolean;
 }
+
 const App = () => {
     const [text, setText] = useState("");
-    const [showText, setShowText] = useState(false);
-    const [length, setLength] = useState<length>("short");
-    const [isWithPunctuation, setIsWithPunctuation] = useState(true);
     const [gameMode, setGameMode] = useState<GameMode>({
         isLorem: true,
         isBacon: false,
     });
     const [theme, setTheme] = useState("lorem");
+    const [requestParameters, setRequestParameters] =
+        useState<RequestParameters>({
+            isWithPunctuation: true,
+            length: "short",
+            meat: "all-meat",
+        });
 
     useEffect(() => {
-        loremIpsumService.getParagraphs(length).then((result) => {
-            if (isWithPunctuation) {
-                setText(result);
-            } else {
-                const newText = removePunctuation(result);
-                setText(newText);
-            }
-        });
-        setShowText(true);
-    }, [isWithPunctuation, length]);
+        if (gameMode.isLorem) {
+            loremIpsumService
+                .getParagraphs(requestParameters.length)
+                .then((result) => {
+                    if (requestParameters.isWithPunctuation) {
+                        setText(result);
+                    } else {
+                        const newText = removePunctuation(result);
+                        setText(newText);
+                    }
+                });
+        }
+        if (gameMode.isBacon) {
+            baconIpsumService
+                .getParagraphs(requestParameters.length, requestParameters.meat)
+                .then((result) => {
+                    if (requestParameters.isWithPunctuation) {
+                        setText(result);
+                    } else {
+                        const newText = removePunctuation(result);
+                        setText(newText);
+                    }
+                });
+        }
+    }, [requestParameters, gameMode]);
 
     const handleLengthChange = (
         event: React.ChangeEvent<HTMLSelectElement>
     ) => {
         const { target } = event;
-        const length = target.value as length;
-        setLength(length);
+        const length = target.value as RequestParameters["length"];
+        setRequestParameters((prev) => ({ ...prev, length: length }));
     };
 
     const handlePunctuationChange = (
@@ -45,7 +65,15 @@ const App = () => {
     ) => {
         const { target } = event;
         const punctuation = target.value;
-        setIsWithPunctuation(punctuation === "1");
+        setRequestParameters((prev) => ({
+            ...prev,
+            isWithPunctuation: punctuation === "1",
+        }));
+    };
+    const handleMeatChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const { target } = event;
+        const meat = target.value as RequestParameters["meat"];
+        setRequestParameters((prev) => ({ ...prev, meat: meat }));
     };
 
     const removePunctuation = (text: string): string => {
@@ -90,6 +118,16 @@ const App = () => {
                                 <option value={0}>no punctuation</option>
                             </select>
                         </div>
+                        {gameMode.isBacon && (
+                            <div className="options__group">
+                                <select onChange={handleMeatChange}>
+                                    <option value="all-meat">carnivore</option>
+                                    <option value="meat-and-filler">
+                                        omnivore
+                                    </option>
+                                </select>
+                            </div>
+                        )}
                     </div>
                 </section>
                 <section className="">
