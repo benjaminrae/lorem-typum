@@ -25,7 +25,8 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
     const [showTypingInput, setShowTypingInput] = useState(false);
     const wordInput = useRef<null | HTMLInputElement>(null);
     const currentLetter = useRef<null | HTMLDivElement>(null);
-
+    const typingField = useRef<null | HTMLDivElement>(null);
+    // console.dir(currentLetter);
     useEffect(() => {
         if (!typingData) {
             return;
@@ -61,7 +62,7 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
         typingInputWords.forEach((word, wordIndex) => {
             word.split("").forEach((letter, letterIndex) => {
                 if (letterIndex >= typingData[wordIndex].length) {
-                    console.log("too may letters");
+                    // console.log("too may letters");
                     newTypingData = removeCursors(newTypingData);
 
                     const newLetter: letter = {
@@ -88,12 +89,13 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                                 letter.isExtra &&
                                 letterIndex >= newLetterIndex
                             ) {
-                                console.log(letterIndex, newLetterIndex);
+                                // console.log(letterIndex, newLetterIndex);
                                 letter.isDeleted = false;
                                 return letter;
                             } else {
                                 letter.isDeleted = true;
-                                console.log("delete");
+                                // console.log("delete");
+
                                 return letter;
                             }
                         });
@@ -131,10 +133,14 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
     }, [typingInput]);
 
     useEffect(() => {
-        if (currentLetter.current) {
-            currentLetter.current.scrollIntoView();
+        if (currentLetter.current && typingField.current) {
+            const offset = currentLetter.current.offsetTop;
+            console.log(offset);
+            typingField.current.style.transform = `translateY(-${
+                offset / 2
+            }px)`;
         }
-    }, []);
+    }, [currentLetter.current]);
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Backspace") {
@@ -196,6 +202,7 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                             ? "typing-field__input"
                             : "typing-field__input--blurred"
                     }
+                    ref={typingField}
                 >
                     <input
                         onKeyDown={handleKeyPress}

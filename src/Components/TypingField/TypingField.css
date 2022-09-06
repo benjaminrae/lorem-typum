@@ -30,7 +30,7 @@
     font-size: 1.5rem;
     white-space: nowrap;
     overflow: hidden;
-    transform: translateY();
+    transition: all 0.5s ease-in-out;
 }
 
 .typing-field__input--blurred {
