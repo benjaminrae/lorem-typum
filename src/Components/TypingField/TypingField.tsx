@@ -1,5 +1,5 @@
 import "./TypingField.css";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 type TypingFieldProps = {
     typingText: string;
@@ -101,21 +101,24 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
         return event;
     };
 
-    const handleTypingInputChange = (event: any) => {
-        setTypingInput(event.target.value);
+    const handleTypingInputChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const { target } = event;
+        setTypingInput(target.value);
     };
 
-    const handleTypingFieldClick = (event: any) => {
+    const handleTypingFieldClick = (event: React.MouseEvent) => {
         if (wordInput.current !== null) {
             wordInput.current.focus();
         }
     };
 
-    const handleInputOnFocus = () => {
+    const handleInputOnFocus = (event: React.FocusEvent<HTMLInputElement>) => {
         setShowTypingInput(true);
     };
 
-    const handleInputOnBlur = () => {
+    const handleInputOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
         setShowTypingInput(false);
     };
 

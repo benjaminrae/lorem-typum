@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEventHandler } from "react";
 import "./App.css";
 import Header from "../Header/Header";
 import loremIpsumService from "../../services/loremIpsumService";
 import TypingField from "../TypingField/TypingField";
-
-type length = "short" | "medium" | "long";
+import { length } from "../../services/loremIpsumService";
 
 const App = () => {
     const [text, setText] = useState("");
@@ -13,7 +12,6 @@ const App = () => {
     const [isWithPunctuation, setIsWithPunctuation] = useState(true);
 
     useEffect(() => {
-        console.log(length, "len/paras");
         loremIpsumService.getParagraphs(length).then((result) => {
             if (isWithPunctuation) {
                 setText(result);
@@ -25,12 +23,20 @@ const App = () => {
         setShowText(true);
     }, [isWithPunctuation, length]);
 
-    const handleLengthChange = (event: any) => {
-        setLength(event.target.value);
+    const handleLengthChange = (
+        event: React.ChangeEvent<HTMLSelectElement>
+    ) => {
+        const { target } = event;
+        const length = target.value as length;
+        setLength(length);
     };
 
-    const handlePunctuationChange = (event: any) => {
-        setIsWithPunctuation(event.target.value === 1);
+    const handlePunctuationChange = (
+        event: React.ChangeEvent<HTMLSelectElement>
+    ) => {
+        const { target } = event;
+        const punctuation = target.value;
+        setIsWithPunctuation(punctuation === "1");
     };
 
     const removePunctuation = (text: string): string => {
