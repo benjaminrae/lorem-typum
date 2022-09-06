@@ -77,7 +77,8 @@
 .word__character--deleted {
     display: none;
 }
-.word__position-marker {
+.word__position-marker,
+.word__position-marker--right {
     position: absolute;
     background-color: var(--mandarin);
     height: 1.5rem;
@@ -85,6 +86,9 @@
     animation: blink 1.5s linear infinite;
 }
 
+.word__position-marker--right {
+    right: 0;
+}
 @keyframes blink {
     0% {
         opacity: 1;

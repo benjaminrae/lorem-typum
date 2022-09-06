@@ -62,6 +62,8 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
             word.split("").forEach((letter, letterIndex) => {
                 if (letterIndex >= typingData[wordIndex].length) {
                     console.log("too may letters");
+                    newTypingData = removeCursors(newTypingData);
+
                     const newLetter: letter = {
                         character: typingInputWords[wordIndex][letterIndex],
                         isCurrent: true,
@@ -70,7 +72,6 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                         isExtra: true,
                     };
                     newTypingData[wordIndex].push(newLetter);
-                    newTypingData = removeCursors(newTypingData);
                     setTypingData(newTypingData);
                     return;
                 }
@@ -211,13 +212,13 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                     />
                     {/* <input id="wordsInput" class="" tabindex="0" autocomplete="off" autocapitalize="off" autocorrect="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" list="autocompleteOff" /> */}
                     {typingData &&
-                        typingData.map((word, index) => {
+                        typingData.map((word, wordIndex) => {
                             return (
-                                <div className="input__word" key={index}>
-                                    {word.map((letter, index) => (
+                                <div className="input__word" key={wordIndex}>
+                                    {word.map((letter, letterIndex) => (
                                         <>
                                             <div
-                                                key={index}
+                                                key={letterIndex}
                                                 className={
                                                     letter.isDeleted
                                                         ? "word__character--deleted"
@@ -236,7 +237,14 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                                                 }
                                             >
                                                 {letter.isCurrent && (
-                                                    <div className="word__position-marker"></div>
+                                                    <div
+                                                        className={
+                                                            letterIndex ===
+                                                            word.length - 1
+                                                                ? "word__position-marker--right"
+                                                                : "word__position-marker"
+                                                        }
+                                                    ></div>
                                                 )}
                                                 {letter.character}
                                             </div>
