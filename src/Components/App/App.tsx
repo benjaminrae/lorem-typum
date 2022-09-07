@@ -5,6 +5,7 @@ import loremIpsumService from "../../services/loremIpsumService";
 import TypingField from "../TypingField/TypingField";
 import { RequestParameters } from "../../services/loremIpsumService";
 import baconIpsumService from "../../services/baconIpsumService";
+import hipsterIpsumService from "../../services/hipsterIpsumService";
 
 export interface GameMode {
     isLorem: boolean;
@@ -29,6 +30,7 @@ const App = () => {
             isWithPunctuation: true,
             length: "short",
             meat: "all-meat",
+            hipster: "hipster-centric",
         });
 
     useEffect(() => {
@@ -50,6 +52,21 @@ const App = () => {
         if (gameMode.isBacon) {
             baconIpsumService
                 .getParagraphs(requestParameters.length, requestParameters.meat)
+                .then((result) => {
+                    if (requestParameters.isWithPunctuation) {
+                        setText(result);
+                    } else {
+                        const newText = removePunctuation(result);
+                        setText(newText);
+                    }
+                });
+        }
+        if (gameMode.isHipster) {
+            hipsterIpsumService
+                .getParagraphs(
+                    requestParameters.length,
+                    requestParameters.hipster
+                )
                 .then((result) => {
                     if (requestParameters.isWithPunctuation) {
                         setText(result);
@@ -89,6 +106,14 @@ const App = () => {
         setRequestParameters((prev) => ({ ...prev, meat: meat }));
         setGameMode((prev) => ({ ...prev, isNew: false }));
     };
+    const handleHipsterChange = (
+        event: React.ChangeEvent<HTMLSelectElement>
+    ) => {
+        const { target } = event;
+        const hipster = target.value as RequestParameters["hipster"];
+        setRequestParameters((prev) => ({ ...prev, hipster: hipster }));
+        setGameMode((prev) => ({ ...prev, isNew: false }));
+    };
 
     const removePunctuation = (text: string): string => {
         const regex = /([a-zA-Z]|\s)/g;
@@ -99,14 +124,34 @@ const App = () => {
 
     const changeToBacon = () => {
         setGameMode((prev) => ({ ...prev, isNew: false }));
-        setGameMode((prev) => ({ ...prev, isLorem: false, isBacon: true }));
+        setGameMode((prev) => ({
+            ...prev,
+            isLorem: false,
+            isBacon: true,
+            isHipster: false,
+        }));
         setTheme("bacon");
     };
 
     const changeToLorem = () => {
         setGameMode((prev) => ({ ...prev, isNew: false }));
-        setGameMode((prev) => ({ ...prev, isLorem: true, isBacon: false }));
+        setGameMode((prev) => ({
+            ...prev,
+            isLorem: true,
+            isBacon: false,
+            isHipster: false,
+        }));
         setTheme("lorem");
+    };
+    const changeToHipster = () => {
+        setGameMode((prev) => ({ ...prev, isNew: false }));
+        setGameMode((prev) => ({
+            ...prev,
+            isLorem: false,
+            isBacon: false,
+            isHipster: true,
+        }));
+        setTheme("hipster");
     };
 
     const handleNewGameChange = () => {
@@ -119,6 +164,7 @@ const App = () => {
                 gameMode={gameMode}
                 changeToBacon={changeToBacon}
                 changeToLorem={changeToLorem}
+                changeToHipster={changeToHipster}
             />
 
             <div className="app__main-container">
@@ -144,6 +190,18 @@ const App = () => {
                                     <option value="all-meat">carnivore</option>
                                     <option value="meat-and-filler">
                                         omnivore
+                                    </option>
+                                </select>
+                            </div>
+                        )}
+                        {gameMode.isHipster && (
+                            <div className="options__group">
+                                <select onChange={handleHipsterChange}>
+                                    <option value="hipster-centric">
+                                        full hipster
+                                    </option>
+                                    <option value="hipster-latin">
+                                        half hipster
                                     </option>
                                 </select>
                             </div>

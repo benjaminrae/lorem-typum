@@ -4,6 +4,7 @@ export interface RequestParameters {
     isWithPunctuation: boolean;
     length: "short" | "medium" | "long";
     meat: "all-meat" | "meat-and-filler";
+    hipster: "hipster-centric" | "hipster-latin";
 }
 
 const baseUrl = new URL("https://loripsum.net/api");

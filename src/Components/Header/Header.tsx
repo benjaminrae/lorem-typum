@@ -4,17 +4,26 @@ import React from "react";
 
 type HeaderProps = {
     gameMode: GameMode;
-    changeToBacon: any;
-    changeToLorem: any;
+    changeToBacon: () => void;
+    changeToLorem: () => void;
+    changeToHipster: () => void;
 };
 
-const Header = ({ gameMode, changeToBacon, changeToLorem }: HeaderProps) => {
+const Header = ({
+    gameMode,
+    changeToBacon,
+    changeToLorem,
+    changeToHipster,
+}: HeaderProps) => {
     const handleGameModeClick = (event: React.MouseEvent<HTMLLIElement>) => {
         if (event.currentTarget.id === "bacon") {
             changeToBacon();
         }
         if (event.currentTarget.id === "lorem") {
             changeToLorem();
+        }
+        if (event.currentTarget.id === "hipster") {
+            changeToHipster();
         }
     };
     return (
@@ -34,15 +43,6 @@ const Header = ({ gameMode, changeToBacon, changeToLorem }: HeaderProps) => {
             </h1>
             <nav className="header__nav">
                 <ul className="nav__list">
-                    {!gameMode.isBacon && (
-                        <li
-                            className="list__game-mode"
-                            onClick={handleGameModeClick}
-                            id="bacon"
-                        >
-                            🥓
-                        </li>
-                    )}
                     {!gameMode.isLorem && (
                         <li
                             className="list__game-mode"
@@ -50,6 +50,15 @@ const Header = ({ gameMode, changeToBacon, changeToLorem }: HeaderProps) => {
                             id="lorem"
                         >
                             🏛️
+                        </li>
+                    )}
+                    {!gameMode.isBacon && (
+                        <li
+                            className="list__game-mode"
+                            onClick={handleGameModeClick}
+                            id="bacon"
+                        >
+                            🥓
                         </li>
                     )}
                     {!gameMode.isHipster && (

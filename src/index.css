@@ -25,3 +25,8 @@
     --apricot: #fbc4abff;
     --background: #ffdab9ff;
 }
+[data-theme="hipster"] {
+    --header: #75a48b;
+
+    --background: #d9cfb0;
+}
