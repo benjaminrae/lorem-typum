@@ -20,12 +20,21 @@ const Header = ({ gameMode, changeToBacon, changeToLorem }: HeaderProps) => {
     return (
         <header className="header">
             <h1 className="header__title">
-                {gameMode.isLorem ? "Lorem" : "Bacon"} Typum
+                {gameMode.isLorem
+                    ? "Lorem"
+                    : gameMode.isBacon
+                    ? "Bacon"
+                    : gameMode.isHipster
+                    ? "Hipster"
+                    : gameMode.isPirate
+                    ? "Pirate"
+                    : ""}{" "}
+                Typum
                 <span className="header__text-cursor">|</span>
             </h1>
             <nav className="header__nav">
                 <ul className="nav__list">
-                    {gameMode.isLorem && (
+                    {!gameMode.isBacon && (
                         <li
                             className="list__game-mode"
                             onClick={handleGameModeClick}
@@ -34,13 +43,31 @@ const Header = ({ gameMode, changeToBacon, changeToLorem }: HeaderProps) => {
                             🥓
                         </li>
                     )}
-                    {gameMode.isBacon && (
+                    {!gameMode.isLorem && (
                         <li
                             className="list__game-mode"
                             onClick={handleGameModeClick}
                             id="lorem"
                         >
                             🏛️
+                        </li>
+                    )}
+                    {!gameMode.isHipster && (
+                        <li
+                            className="list__game-mode"
+                            onClick={handleGameModeClick}
+                            id="hipster"
+                        >
+                            🧔‍♂️
+                        </li>
+                    )}
+                    {!gameMode.isPirate && (
+                        <li
+                            className="list__game-mode"
+                            onClick={handleGameModeClick}
+                            id="pirate"
+                        >
+                            🏴‍☠️
                         </li>
                     )}
                 </ul>

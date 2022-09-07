@@ -1,8 +1,11 @@
 import "./TypingField.css";
 import React, { useState, useEffect, useRef } from "react";
+import { GameMode } from "../App/App";
 
 type TypingFieldProps = {
     typingText: string;
+    gameMode: GameMode;
+    handleNewGameChange: () => void;
 };
 
 interface letter {
@@ -19,13 +22,24 @@ type word = letter[];
 
 type typingData = word[];
 
-const TypingField = ({ typingText }: TypingFieldProps) => {
+const TypingField = ({
+    typingText,
+    gameMode,
+    handleNewGameChange,
+}: TypingFieldProps) => {
     const [typingData, setTypingData] = useState<typingData | null>([]);
     const [typingInput, setTypingInput] = useState("");
     const [showTypingInput, setShowTypingInput] = useState(false);
+    const [offset, setOffset] = useState(0);
     const wordInput = useRef<null | HTMLInputElement>(null);
     const currentLetter = useRef<null | HTMLDivElement>(null);
     const typingField = useRef<null | HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!gameMode.isNew) {
+            resetTypingInput();
+        }
+    }, [gameMode]);
 
     useEffect(() => {
         if (!typingData) {
@@ -48,6 +62,7 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
         );
 
         setTypingData(typingTextWordsAndLetters);
+        // handleNewGameChange();
     }, [typingText]);
 
     useEffect(() => {
@@ -136,10 +151,10 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
 
     useEffect(() => {
         if (currentLetter.current && typingField.current) {
-            const offset = currentLetter.current.offsetTop;
+            setOffset(currentLetter.current.offsetTop);
             console.log(offset);
             typingField.current.style.transform = `translateY(-${
-                offset / 2
+                offset * 0.75
             }px)`;
         }
     }, [currentLetter.current]);

@@ -27,6 +27,7 @@
 
 .nav__list {
     list-style: none;
+    display: flex;
 }
 
 .list__game-mode {
