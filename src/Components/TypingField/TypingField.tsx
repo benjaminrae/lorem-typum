@@ -26,7 +26,7 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
     const wordInput = useRef<null | HTMLInputElement>(null);
     const currentLetter = useRef<null | HTMLDivElement>(null);
     const typingField = useRef<null | HTMLDivElement>(null);
-    // console.dir(currentLetter);
+
     useEffect(() => {
         if (!typingData) {
             return;
@@ -119,8 +119,10 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                 newTypingData = removeCursors(newTypingData);
                 if (typingData[wordIndex][letterIndex + 1]) {
                     newTypingData[wordIndex][letterIndex + 1].isCurrent = true;
-                } else {
+                } else if (typingInput.at(-1) === " ") {
                     newTypingData[wordIndex + 1][0].isCurrent = true;
+                } else {
+                    newTypingData[wordIndex][letterIndex].isCurrent = true;
                 }
                 if (currentLetter.current) {
                     currentLetter.current.scrollIntoView({
@@ -142,10 +144,13 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
         }
     }, [currentLetter.current]);
 
+    const resetTypingInput = () => {
+        setTypingInput("");
+    };
+
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Backspace") {
         }
-        // console.log(event);
         return event;
     };
 
@@ -179,9 +184,9 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
         });
     };
 
-    const removeExtras = (newTypingData: word[]) => {
-        return newTypingData.map((word) => {});
-    };
+    // const removeExtras = (newTypingData: word[]) => {
+    //     return newTypingData.map((word) => {});
+    // };
 
     return (
         <section
@@ -217,7 +222,7 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                         onFocus={handleInputOnFocus}
                         onBlur={handleInputOnBlur}
                     />
-                    {/* <input id="wordsInput" class="" tabindex="0" autocomplete="off" autocapitalize="off" autocorrect="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" list="autocompleteOff" /> */}
+
                     {typingData &&
                         typingData.map((word, wordIndex) => {
                             return (
@@ -246,8 +251,9 @@ const TypingField = ({ typingText }: TypingFieldProps) => {
                                                 {letter.isCurrent && (
                                                     <div
                                                         className={
-                                                            letterIndex ===
-                                                            word.length - 1
+                                                            letter.isCorrect
+                                                                ? "word__position-marker--right"
+                                                                : letter.isExtra
                                                                 ? "word__position-marker--right"
                                                                 : "word__position-marker"
                                                         }
