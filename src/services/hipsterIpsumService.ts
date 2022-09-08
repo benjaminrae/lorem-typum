@@ -4,6 +4,7 @@ import { RequestParameters } from "./loremIpsumService";
 
 const baseUrl = new URL("http://hipsum.co/api");
 const corsProxyUrl = new URL("https://wonderfulcorsproxy.herokuapp.com/");
+const doubleSpaceRegex = /\s\s/g
 const getParagraphs = async (
     length: RequestParameters["length"],
     hipster: RequestParameters["hipster"]
@@ -28,7 +29,7 @@ const getParagraphs = async (
     );
     return await request
         .then((response: { data: string[] }) => {
-            return response.data.join(" ");
+            return response.data.map(paragraph => paragraph.replace(doubleSpaceRegex, " ")).join("");
         })
         .catch((error: string) => {
             return error;

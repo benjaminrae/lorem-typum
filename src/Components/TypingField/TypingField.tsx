@@ -31,6 +31,7 @@ const TypingField = ({
     const [typingInput, setTypingInput] = useState("");
     const [showTypingInput, setShowTypingInput] = useState(false);
     const [offset, setOffset] = useState(0);
+    const [gameEnd, setGameEnd] = useState(false)
     const wordInput = useRef<null | HTMLInputElement>(null);
     const currentLetter = useRef<null | HTMLDivElement>(null);
     const typingField = useRef<null | HTMLDivElement>(null);
@@ -145,6 +146,7 @@ const TypingField = ({
                     });
                 }
                 setTypingData(newTypingData);
+                checkEndOfWords(newTypingData, wordIndex, letterIndex)
             });
         });
     }, [typingInput]);
@@ -158,6 +160,14 @@ const TypingField = ({
             }px)`;
         }
     }, [currentLetter.current]);
+
+    const checkEndOfWords = (newTypingData: typingData, wordIndex: number, letterIndex: number) => {
+        console.log(wordIndex, "wordIndex", newTypingData.length - 1)
+        if (wordIndex === newTypingData.length-1 && !newTypingData[wordIndex][letterIndex + 1]) {
+            setGameEnd(true)
+            setShowTypingInput(false);
+        }
+    }
 
     const resetTypingInput = () => {
         setTypingInput("");
@@ -177,6 +187,12 @@ const TypingField = ({
     };
 
     const handleTypingFieldClick = (event: React.MouseEvent) => {
+        if (gameEnd) {
+            handleNewGameChange()
+            setOffset(0)
+            setGameEnd(false)
+            return;
+        }
         if (wordInput.current !== null) {
             wordInput.current.focus();
         }
@@ -212,14 +228,14 @@ const TypingField = ({
         >
             {!showTypingInput && (
                 <div className="typing-field__focus-warning">
-                    Click to continue
+                    {gameEnd ? "Click to start again" : "Click to continue"}
                 </div>
             )}
             <div className="typing-field__input-wrapper">
                 <div
                     className={
-                        showTypingInput
-                            ? "typing-field__input"
+                        gameEnd ?"typing-field__input--blurred" :
+                            showTypingInput ? "typing-field__input"
                             : "typing-field__input--blurred"
                     }
                     ref={typingField}
