@@ -1,6 +1,7 @@
 import "./TypingField.css";
 import React, { useState, useEffect, useRef } from "react";
 import { GameMode } from "../App/App";
+import CurrentScore from "../CurrentScore/CurrentScore";
 
 type TypingFieldProps = {
     typingText: string;
@@ -8,7 +9,7 @@ type TypingFieldProps = {
     handleNewGameChange: () => void;
 };
 
-interface letter {
+type Letter = {
     character: string;
     isCurrent: boolean;
     isCorrect: boolean;
@@ -16,22 +17,37 @@ interface letter {
     isDeleted?: boolean;
     isCorrected?: boolean;
     isExtra?: boolean;
-}
+};
 
-type word = letter[];
+type Word = Letter[];
 
-type typingData = word[];
+export type TypingData = Word[];
+
+export type TimerData = {
+    isTimerStarted: boolean;
+    timerVariable: TimerData | null;
+    startTime: number | null;
+    endTime: number | null;
+    timeElapsed: number;
+};
 
 const TypingField = ({
     typingText,
     gameMode,
     handleNewGameChange,
 }: TypingFieldProps) => {
-    const [typingData, setTypingData] = useState<typingData | null>([]);
+    const [typingData, setTypingData] = useState<TypingData | null>([]);
     const [typingInput, setTypingInput] = useState("");
     const [showTypingInput, setShowTypingInput] = useState(false);
     const [offset, setOffset] = useState(0);
-    const [gameEnd, setGameEnd] = useState(false)
+    const [gameEnd, setGameEnd] = useState(false);
+    const [timerData, setTimerData] = useState<TimerData>({
+        isTimerStarted: false,
+        timerVariable: null,
+        startTime: null,
+        endTime: null,
+        timeElapsed: 0,
+    });
     const wordInput = useRef<null | HTMLInputElement>(null);
     const currentLetter = useRef<null | HTMLDivElement>(null);
     const typingField = useRef<null | HTMLDivElement>(null);
@@ -81,7 +97,7 @@ const TypingField = ({
                     // console.log("too may letters");
                     newTypingData = removeCursors(newTypingData);
 
-                    const newLetter: letter = {
+                    const newLetter: Letter = {
                         character: typingInputWords[wordIndex][letterIndex],
                         isCurrent: true,
                         isCorrect: false,
@@ -146,7 +162,7 @@ const TypingField = ({
                     });
                 }
                 setTypingData(newTypingData);
-                checkEndOfWords(newTypingData, wordIndex, letterIndex)
+                checkEndOfWords(newTypingData, wordIndex, letterIndex);
             });
         });
     }, [typingInput]);
@@ -154,20 +170,33 @@ const TypingField = ({
     useEffect(() => {
         if (currentLetter.current && typingField.current) {
             setOffset(currentLetter.current.offsetTop);
-            console.log(offset);
+            // console.log(offset);
             typingField.current.style.transform = `translateY(-${
                 offset * 0.75
             }px)`;
         }
     }, [currentLetter.current]);
 
-    const checkEndOfWords = (newTypingData: typingData, wordIndex: number, letterIndex: number) => {
-        console.log(wordIndex, "wordIndex", newTypingData.length - 1)
-        if (wordIndex === newTypingData.length-1 && !newTypingData[wordIndex][letterIndex + 1]) {
-            setGameEnd(true)
+    const checkEndOfWords = (
+        newTypingData: TypingData,
+        wordIndex: number,
+        letterIndex: number
+    ) => {
+        // console.log(wordIndex, "wordIndex", newTypingData.length - 1);
+        if (
+            wordIndex === newTypingData.length - 1 &&
+            !newTypingData[wordIndex][letterIndex + 1]
+        ) {
+            setGameEnd(true);
+            const timeNow = Date.now();
+            setTimerData((prev) => ({
+                ...prev,
+                endTime: timeNow,
+                timeElapsed: timeNow - prev.startTime!,
+            }));
             setShowTypingInput(false);
         }
-    }
+    };
 
     const resetTypingInput = () => {
         setTypingInput("");
@@ -188,9 +217,9 @@ const TypingField = ({
 
     const handleTypingFieldClick = (event: React.MouseEvent) => {
         if (gameEnd) {
-            handleNewGameChange()
-            setOffset(0)
-            setGameEnd(false)
+            handleNewGameChange();
+            setOffset(0);
+            setGameEnd(false);
             return;
         }
         if (wordInput.current !== null) {
@@ -199,6 +228,14 @@ const TypingField = ({
     };
 
     const handleInputOnFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+        if (!timerData.isTimerStarted) {
+            const timeNow = Date.now();
+            setTimerData((prev) => ({
+                ...prev,
+                isTimerStarted: true,
+                startTime: timeNow,
+            }));
+        }
         setShowTypingInput(true);
     };
 
@@ -206,7 +243,7 @@ const TypingField = ({
         setShowTypingInput(false);
     };
 
-    const removeCursors = (newTypingData: word[]) => {
+    const removeCursors = (newTypingData: Word[]) => {
         return newTypingData.map((word) => {
             return word.map((letter) => {
                 letter.isCurrent = false;
@@ -234,8 +271,10 @@ const TypingField = ({
             <div className="typing-field__input-wrapper">
                 <div
                     className={
-                        gameEnd ?"typing-field__input--blurred" :
-                            showTypingInput ? "typing-field__input"
+                        gameEnd
+                            ? "typing-field__input--blurred"
+                            : showTypingInput
+                            ? "typing-field__input"
                             : "typing-field__input--blurred"
                     }
                     ref={typingField}
@@ -299,6 +338,11 @@ const TypingField = ({
                         })}
                 </div>
             </div>
+            <CurrentScore
+                timerData={timerData}
+                typingData={typingData}
+                typingText={typingText}
+            />
         </section>
     );
 };

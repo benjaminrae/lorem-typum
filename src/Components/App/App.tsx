@@ -6,7 +6,6 @@ import TypingField from "../TypingField/TypingField";
 import { RequestParameters } from "../../services/loremIpsumService";
 import baconIpsumService from "../../services/baconIpsumService";
 import hipsterIpsumService from "../../services/hipsterIpsumService";
-
 export interface GameMode {
     isLorem: boolean;
     isBacon: boolean;
