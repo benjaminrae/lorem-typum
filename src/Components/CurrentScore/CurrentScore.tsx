@@ -47,23 +47,25 @@ const CurrentScore = ({
     return (
         <section>
             <table>
-                <tr>
-                    <td>Raw WPM:</td>
-                    <td>
-                        {scoreData.length &&
-                            scoreData.at(-1)?.rawWPM.toFixed(3)}
-                    </td>
-                    <td>Correct:</td>
-                    <td>--</td>
-                    <td>Failed:</td>
-                    <td>--</td>
-                    <td>Time:</td>
-                    <td>
-                        {timerData.endTime
-                            ? `${timerData.timeElapsed / 1000}s`
-                            : "--"}
-                    </td>
-                </tr>
+                <tbody>
+                    <tr>
+                        <td>Raw WPM:</td>
+                        <td>
+                            {scoreData.length &&
+                                scoreData.at(-1)?.rawWPM.toFixed(3)}
+                        </td>
+                        <td>Correct:</td>
+                        <td>--</td>
+                        <td>Failed:</td>
+                        <td>--</td>
+                        <td>Time:</td>
+                        <td>
+                            {timerData.endTime
+                                ? `${timerData.timeElapsed / 1000}s`
+                                : "--"}
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </section>
     );

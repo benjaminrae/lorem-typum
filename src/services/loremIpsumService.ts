@@ -15,7 +15,6 @@ const getParagraphs = async (length: RequestParameters["length"]) => {
     );
     return await request
         .then((response: { data: string }) => {
-            console.log(response)
             return response.data.trimEnd();
         })
         .catch((error: string) => {

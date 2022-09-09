@@ -64,23 +64,8 @@ const TypingField = ({
         if (!typingData) {
             return;
         }
-        const typingTextWords = typingText.split(" ");
-        typingTextWords[1] = "typum";
-        const typingTextWordsAndLetters = typingTextWords.map(
-            (word, wordIndex) => {
-                const splitWord = word.split("").map((letter, letterIndex) => {
-                    return {
-                        character: letter,
-                        isCurrent: wordIndex === 0 && letterIndex === 0,
-                        isCorrect: false,
-                        isIncorrect: false,
-                    };
-                });
-                return splitWord;
-            }
-        );
-
-        setTypingData(typingTextWordsAndLetters);
+        const newTypingData = setUpTypingData(typingText);
+        setTypingData(newTypingData);
         // handleNewGameChange();
     }, [typingText]);
 
@@ -170,14 +155,37 @@ const TypingField = ({
     }, [typingInput]);
 
     useEffect(() => {
+        if (currentLetter.current?.offsetTop === offset) {
+            return;
+        }
         if (currentLetter.current && typingField.current) {
             setOffset(currentLetter.current.offsetTop);
-            // console.log(offset);
             typingField.current.style.transform = `translateY(-${
                 offset * 0.75
             }px)`;
         }
-    }, [currentLetter.current]);
+    }, [currentLetter.current, offset]);
+
+    const setUpTypingData = (
+        typingText: TypingFieldProps["typingText"]
+    ): TypingData => {
+        const typingTextWords = typingText.split(" ");
+        typingTextWords[1] = "typum";
+        const typingTextWordsAndLetters = typingTextWords.map(
+            (word, wordIndex) => {
+                const splitWord = word.split("").map((letter, letterIndex) => {
+                    return {
+                        character: letter,
+                        isCurrent: wordIndex === 0 && letterIndex === 0,
+                        isCorrect: false,
+                        isIncorrect: false,
+                    };
+                });
+                return splitWord;
+            }
+        );
+        return typingTextWordsAndLetters;
+    };
 
     const checkEndOfWords = (
         newTypingData: TypingData,
@@ -312,9 +320,8 @@ const TypingField = ({
                             return (
                                 <div className="input__word" key={wordIndex}>
                                     {word.map((letter, letterIndex) => (
-                                        <>
+                                        <div key={letterIndex}>
                                             <div
-                                                key={letterIndex}
                                                 className={
                                                     letter.isDeleted
                                                         ? "word__character--deleted"
@@ -345,7 +352,7 @@ const TypingField = ({
                                                 )}
                                                 {letter.character}
                                             </div>
-                                        </>
+                                        </div>
                                     ))}
                                 </div>
                             );
