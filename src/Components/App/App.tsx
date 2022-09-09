@@ -21,7 +21,7 @@ const App = () => {
         isBacon: false,
         isHipster: false,
         isPirate: false,
-        isNew: false,
+        isNew: true,
     });
     const [theme, setTheme] = useState("lorem");
     const [requestParameters, setRequestParameters] =
@@ -33,9 +33,15 @@ const App = () => {
         });
 
     useEffect(() => {
-        if (gameMode.isNew) {
+        if (!gameMode.isNew) {
             return;
         }
+        getAndSetGameText();
+        setGameMode((prev) => ({ ...prev, isNew: false }));
+        // handleNewGameChange();
+    }, [requestParameters, gameMode]);
+
+    const getAndSetGameText = () => {
         if (gameMode.isLorem) {
             loremIpsumService
                 .getParagraphs(requestParameters.length)
@@ -75,17 +81,14 @@ const App = () => {
                     }
                 });
         }
-        setGameMode((prev) => ({ ...prev, isNew: true }));
-        // handleNewGameChange();
-    }, [requestParameters, gameMode]);
-
+    };
     const handleLengthChange = (
         event: React.ChangeEvent<HTMLSelectElement>
     ) => {
         const { target } = event;
         const length = target.value as RequestParameters["length"];
         setRequestParameters((prev) => ({ ...prev, length: length }));
-        setGameMode((prev) => ({ ...prev, isNew: false }));
+        setGameMode((prev) => ({ ...prev, isNew: true }));
     };
 
     const handlePunctuationChange = (
@@ -97,13 +100,13 @@ const App = () => {
             ...prev,
             isWithPunctuation: punctuation === "1",
         }));
-        setGameMode((prev) => ({ ...prev, isNew: false }));
+        setGameMode((prev) => ({ ...prev, isNew: true }));
     };
     const handleMeatChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const { target } = event;
         const meat = target.value as RequestParameters["meat"];
         setRequestParameters((prev) => ({ ...prev, meat: meat }));
-        setGameMode((prev) => ({ ...prev, isNew: false }));
+        setGameMode((prev) => ({ ...prev, isNew: true }));
     };
     const handleHipsterChange = (
         event: React.ChangeEvent<HTMLSelectElement>
@@ -111,7 +114,7 @@ const App = () => {
         const { target } = event;
         const hipster = target.value as RequestParameters["hipster"];
         setRequestParameters((prev) => ({ ...prev, hipster: hipster }));
-        setGameMode((prev) => ({ ...prev, isNew: false }));
+        setGameMode((prev) => ({ ...prev, isNew: true }));
     };
 
     const removePunctuation = (text: string): string => {
@@ -122,7 +125,7 @@ const App = () => {
     };
 
     const changeToBacon = () => {
-        setGameMode((prev) => ({ ...prev, isNew: false }));
+        setGameMode((prev) => ({ ...prev, isNew: true }));
         setGameMode((prev) => ({
             ...prev,
             isLorem: false,
@@ -133,7 +136,7 @@ const App = () => {
     };
 
     const changeToLorem = () => {
-        setGameMode((prev) => ({ ...prev, isNew: false }));
+        setGameMode((prev) => ({ ...prev, isNew: true }));
         setGameMode((prev) => ({
             ...prev,
             isLorem: true,
@@ -143,7 +146,7 @@ const App = () => {
         setTheme("lorem");
     };
     const changeToHipster = () => {
-        setGameMode((prev) => ({ ...prev, isNew: false }));
+        setGameMode((prev) => ({ ...prev, isNew: true }));
         setGameMode((prev) => ({
             ...prev,
             isLorem: false,
@@ -154,7 +157,7 @@ const App = () => {
     };
 
     const handleNewGameChange = () => {
-        setGameMode((prev) => ({ ...prev, isNew: false }));
+        setGameMode((prev) => ({ ...prev, isNew: true }));
     };
 
     return (

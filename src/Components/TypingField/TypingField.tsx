@@ -55,7 +55,7 @@ const TypingField = ({
     const typingField = useRef<null | HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!gameMode.isNew) {
+        if (gameMode.isNew) {
             resetTypingInput();
         }
     }, [gameMode]);
@@ -166,6 +166,11 @@ const TypingField = ({
         }
     }, [currentLetter.current, offset]);
 
+    const resetOffset = () => {
+        const newOffset = 0;
+        setOffset(newOffset);
+        typingField.current!.style.transform = `translateY(-${newOffset}px)`;
+    };
     const setUpTypingData = (
         typingText: TypingFieldProps["typingText"]
     ): TypingData => {
@@ -230,6 +235,7 @@ const TypingField = ({
         if (gameEnd) {
             handleNewGameChange();
             setOffset(0);
+            resetOffset();
             setGameEnd(false);
             return;
         }
