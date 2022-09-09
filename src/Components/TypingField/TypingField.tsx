@@ -48,6 +48,8 @@ const TypingField = ({
         endTime: null,
         timeElapsed: 0,
     });
+    const [isCapsLockOn, setIsCapsLockOn] = useState(false);
+
     const wordInput = useRef<null | HTMLInputElement>(null);
     const currentLetter = useRef<null | HTMLDivElement>(null);
     const typingField = useRef<null | HTMLDivElement>(null);
@@ -193,6 +195,7 @@ const TypingField = ({
                 ...prev,
                 endTime: timeNow,
                 timeElapsed: timeNow - prev.startTime!,
+                isTimerStarted: false,
             }));
             setShowTypingInput(false);
         }
@@ -252,6 +255,16 @@ const TypingField = ({
         });
     };
 
+    const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!event.getModifierState(event.key)) {
+            setIsCapsLockOn(false);
+        }
+        if (event.getModifierState(event.key) && event.key === "CapsLock") {
+            setIsCapsLockOn(true);
+        }
+    };
+    const checkCapsLock = () => {};
+
     // const removeExtras = (newTypingData: word[]) => {
     //     return newTypingData.map((word) => {});
     // };
@@ -281,6 +294,7 @@ const TypingField = ({
                 >
                     <input
                         onKeyDown={handleKeyPress}
+                        onKeyUp={handleKeyUp}
                         tabIndex={0}
                         autoCapitalize="off"
                         autoComplete="off"
@@ -343,6 +357,7 @@ const TypingField = ({
                 typingData={typingData}
                 typingText={typingText}
             />
+            <div>{isCapsLockOn && "Caps lock is on!"}</div>
         </section>
     );
 };
